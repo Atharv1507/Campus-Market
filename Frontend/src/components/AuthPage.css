@@ -1,0 +1,68 @@
+.auth-container {
+  min-height: calc(100vh - 4rem - 100px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+
+.auth-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  animation: fadeInUp 0.3s var(--transition-smooth) both;
+}
+
+/* Styled state for users who visit /auth while already signed in */
+.signed-in-header {
+  min-height: calc(100vh - 4rem - 100px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 3rem 1rem;
+  animation: fadeInUp 0.3s var(--transition-smooth) both;
+  text-align: center;
+}
+
+.signed-in-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.signed-in-header a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1.25rem;
+  background-color: var(--primary-800);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--radius-full);
+  font-weight: 400;
+  font-size: 0.9375rem;
+  transition: background-color var(--transition-fast);
+}
+
+.signed-in-header a:hover {
+  background-color: var(--primary-600);
+}
+
+/* Base Clerk component overrides if needed */
+:root {
+  --cl-primary-color: var(--primary-700);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
