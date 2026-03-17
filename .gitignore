@@ -23,5 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-./Frontend/*.env
-./backend/*.env
+Frontend/*.env
+backend/*.env
