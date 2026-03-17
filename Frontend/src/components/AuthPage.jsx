@@ -24,20 +24,20 @@ export default function AuthPage() {
   return (
 
     <div className="auth-container">
-      <Link to='/'>Go Home</Link>
+      <Link to='/' className="auth-go-home">←</Link>
       <div className="auth-wrapper">
         {/* Render SignUp by default or if the path is /signup */}
-   {pathname.startsWith('/auth/login') ? (
-          <SignIn 
-            routing="path" 
-            path="/auth/login" 
+        {pathname.startsWith('/auth/login') ? (
+          <SignIn
+            routing="path"
+            path="/auth/login"
             signUpUrl="/auth/signup"
             forceRedirectUrl="/"
           />
         ) : (
-          <SignUp 
-            routing="path" 
-            path="/auth/signup" 
+          <SignUp
+            routing="path"
+            path="/auth/signup"
             signInUrl="/auth/login"
             forceRedirectUrl="/"
           />
