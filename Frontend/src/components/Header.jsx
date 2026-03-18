@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { ShoppingCart, User, Menu, Bell, PlusCircle, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
+import { UserButton } from '@clerk/react';
 
-export default function Header({ onOpenUpload }) {
+export default function Header({ isSignedIn, onOpenUpload }) {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -41,11 +42,13 @@ export default function Header({ onOpenUpload }) {
             <ShoppingCart className="h-5 w-5" />
           </button>
 
-          <Link to="/auth/signup" className="user-profile-btn" style={{ textDecoration: 'none' }} title="Login / Signup">
-            <div className="user-avatar">
-              <User className="h-4 w-4" />
-            </div>
-          </Link>
+          {isSignedIn ? <UserButton afterSignOutUrl="/auth/login" /> :
+            <Link to="/auth/signup" className="user-profile-btn" style={{ textDecoration: 'none' }} title="Login / Signup">
+              <div className="user-avatar">
+                <User className="h-4 w-4" />
+              </div>
+            </Link>
+          }
 
           {/* Mobile menu button */}
           <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
