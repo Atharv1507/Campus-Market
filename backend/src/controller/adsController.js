@@ -1,4 +1,4 @@
-import { createAdsService, deleteAdsService, getAllAdsService, updateAdsService } from "../models/adsModel";
+import { createAdsService, deleteAdsService, getAllAdsService, updateAdsService } from "../models/adsModel.js";
 
 const handleResponse=(res,status,message,data=null)=>{
     res.status(status).json({
@@ -6,7 +6,7 @@ const handleResponse=(res,status,message,data=null)=>{
     });
 };
 
-export const getAllAds=async (res,req,next)=>{
+export const getAllAds=async (req,res,next)=>{
     try{
         const data=await getAllAdsService()
         handleResponse(res,200,"Ads Fetched",data)
@@ -16,7 +16,7 @@ export const getAllAds=async (res,req,next)=>{
     }
 
 }
-export const deleteAdById=async (res,req,next)=>{
+export const deleteAdById=async (req,res,next)=>{
     
     try{
         const data=await deleteAdsService(req.params.id)
@@ -28,10 +28,10 @@ export const deleteAdById=async (res,req,next)=>{
     }
 
 }
-export const updateAdById=async (res,req,next)=>{
-    const{title,category,description}=req.body
+export const updateAdById=async (req,res,next)=>{
+    const{title,budget,description,urgency}=req.body
     try{
-        const data=await updateAdsService(req.params.id,title,category,description)
+        const data=await updateAdsService(req.params.id,title,budget,description,urgency)
         if(!data) return handleResponse(res,404,'No ad with this id was found')
         handleResponse(res,200 ,"Ad updated",data)
 
@@ -40,10 +40,10 @@ export const updateAdById=async (res,req,next)=>{
         next(err)
     }
 }
-export const createAd=async (res,req,next)=>{
-    const{title,category,description,created_by}=req.body
+export const createAd=async (req,res,next)=>{
+    const{title,budget,description,created_by,urgency}=req.body
     try{
-        const data=await createAdsService(title,category,description,created_by)
+        const data=await createAdsService(title,budget,description,created_by,urgency)
         handleResponse(res,200 ,"Ad created",data)
     }
     catch(err){

@@ -1,49 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import './MyAds.css';
-
+import axios from 'axios';
+import { useUser } from '@clerk/react'
 export default function MyAds() {
-  const [needs, setNeeds] = useState([
-    {
-      id: 1,
-      title: 'CS301 Textbook',
-      budget: '40',
-      urgency: 'High',
-      description: 'Looking for Introduction to Algorithms, 3rd Edition. Need it before next Monday!',
-      datePosted: 'Today'
-    },
-    {
-      id: 2,
-      title: 'Mini Fridge',
-      budget: '50-80',
-      urgency: 'Medium',
-      description: 'Need a working mini fridge for my dorm room. Must be clean.',
-      datePosted: '2 days ago'
-    }
-  ]);
-  
+  const { user, isLoaded, isSignedIn } = useUser()
+
+  const [needs, setNeeds] = useState([]);
+
   const [isFormOpen, setIsFormOpen] = useState(false);
+  useEffect(() => {
+    if (!user) return;
+    axios.get('http://localhost:3031/api/ads').then((res) => {
+      const data = res.data.data.filter(need => need.created_by === user.id)
+      setNeeds(data);
+    }).catch((err) => {
+      console.log(err)
+    })
+  }, [user])
+  function handlePost(postData) {
+    axios({
+      method: 'post',
+      url: 'http://localhost:3031/api/ads',
+      data: postData
+    }).then((res) => {
+      // res.data.data contains the new ad with its ad_id
+      setNeeds(prev => [res.data.data, ...prev]);
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const newNeed = {
-      id: Date.now(),
       title: formData.get('title'),
       budget: formData.get('budget'),
-      urgency: formData.get('urgency'),
       description: formData.get('description'),
-      datePosted: 'Just now'
+      created_by: user.id,
+      urgency: formData.get('urgency'),
     };
-    
-    setNeeds([newNeed, ...needs]);
+    handlePost(newNeed)
     setIsFormOpen(false);
     e.target.reset();
   };
 
+
   const handleDelete = (id) => {
-    setNeeds(needs.filter(need => need.id !== id));
+    axios({
+      method: 'delete',
+      url: `http://localhost:3031/api/ads/${id}`,
+    }).then((res) => {
+      console.log(res.data);
+      // Only remove from UI if the backend request was successful
+      setNeeds(needs.filter(need => need.ad_id !== id));
+    }).catch((err) => {
+      console.log(err);
+    })
   };
+
+  if (!isLoaded) return <div className="my-ads-page"><p style={{ color: 'var(--text-muted)' }}>Loading...</p></div>
+  if (!isSignedIn) return <div className="my-ads-page"><p style={{ color: 'var(--text-muted)' }}>Please sign in to view your ads.</p></div>
 
   return (
     <div className="my-ads-page">
@@ -59,12 +77,13 @@ export default function MyAds() {
 
       {isFormOpen && (
         <div className="need-form-container">
+          <h2 className="need-form-title">Post a New Need</h2>
           <form className="need-form" onSubmit={handleSubmit}>
             <div className="form-group">
               <label className="form-label" htmlFor="title">What are you looking for?</label>
               <input name="title" id="title" type="text" className="form-input" placeholder="e.g., Used Chemistry Textbook" required />
             </div>
-            
+
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label" htmlFor="budget">Budget ($)</label>
@@ -79,12 +98,12 @@ export default function MyAds() {
                 </select>
               </div>
             </div>
-            
+
             <div className="form-group">
               <label className="form-label" htmlFor="description">Description (Optional)</label>
               <textarea name="description" id="description" className="form-input" placeholder="Any specific requirements..."></textarea>
             </div>
-            
+
             <div className="form-actions">
               <button type="button" className="btn-cancel" onClick={() => setIsFormOpen(false)}>Cancel</button>
               <button type="submit" className="btn-submit">Post Need</button>
@@ -102,19 +121,19 @@ export default function MyAds() {
         ) : (
           <div className="needs-grid">
             {needs.map(need => (
-              <div key={need.id} className="need-card">
+              <div key={need.ad_id} className="need-card">
                 <div className="need-card-header">
                   <h3>{need.title}</h3>
                   <span className="need-budget">${need.budget}</span>
                 </div>
                 <p className="need-desc">{need.description}</p>
                 <div className="need-meta">
-                  <span className={`urgency-badge urgency-${need.urgency.toLowerCase()}`}>
+                  <span className={`urgency-badge urgency-${need.urgency?.toLowerCase()}`}>
                     {need.urgency} Urgency
                   </span>
                   <span>Posted {need.datePosted}</span>
                 </div>
-                <button className="btn-delete-need" onClick={() => handleDelete(need.id)}>
+                <button className="btn-delete-need" onClick={() => handleDelete(need.ad_id)}>
                   <Trash2 className="h-4 w-4" /> Remove Request
                 </button>
               </div>

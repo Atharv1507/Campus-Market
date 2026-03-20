@@ -23,7 +23,7 @@ export default function Header({ isSignedIn, onOpenUpload }) {
         <nav className="header-nav">
           <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} style={{ textDecoration: 'none' }}>Browse</Link>
           <button className="nav-link">Chats</button>
-          <Link to="/others-needs" className={`nav-link ${location.pathname === '/others-needs' ? 'active' : ''}`} style={{ textDecoration: 'none' }}>Requests</Link>
+          <Link to="/all-ads" className={`nav-link ${location.pathname === '/all-ads' ? 'active' : ''}`} style={{ textDecoration: 'none' }}>Requests</Link>
           <Link to="/my-ads" className={`nav-link ${location.pathname === '/my-ads' ? 'active' : ''}`} style={{ textDecoration: 'none' }}>My Ads</Link>
         </nav>
 
@@ -63,7 +63,7 @@ export default function Header({ isSignedIn, onOpenUpload }) {
           <nav className="mobile-nav-links">
             <Link to="/" className={`mobile-nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Browse</Link>
             <button className="mobile-nav-link">Chats</button>
-            <Link to="/others-needs" className={`mobile-nav-link ${location.pathname === '/others-needs' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Requests</Link>
+            <Link to="/all-ads" className={`mobile-nav-link ${location.pathname === '/all-ads' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Requests</Link>
             <Link to="/my-ads" className={`mobile-nav-link ${location.pathname === '/my-ads' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>My Ads</Link>
             <button className="btn-sell mobile-sell-btn" onClick={() => { onOpenUpload(); setIsMobileMenuOpen(false); }}>
               <PlusCircle className="h-4 w-4" /> Sell Item

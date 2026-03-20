@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageCircle, Heart } from 'lucide-react';
-import './OthersNeeds.css';
+import './AllAds.css';
+import axios from 'axios';
 
-export default function OthersNeeds() {
+export default function AllAds({ ads }) {
   // const [needs] = useState([
   //   {
   //     id: 1,
@@ -55,16 +56,40 @@ export default function OthersNeeds() {
   //     category: 'Furniture & Decor'
   //   }
   // ]);
-
+  const [needs, setNeeds] = useState(ads)
+  const [usersMap, setUsersMap] = useState({})
   const [activeFilter, setActiveFilter] = useState('All');
-
   const filters = ['All', 'High Urgency', 'Electronics', 'Services', 'Clothing'];
 
-  const filteredNeeds = needs.filter(need => {
+  const filteredNeeds = Array.isArray(needs) ? needs.filter(need => {
     if (activeFilter === 'All') return true;
     if (activeFilter === 'High Urgency') return need.urgency === 'High';
     return need.category === activeFilter;
-  });
+  }) : [];
+
+  const fetchData = async () => {
+    try {
+      const [adsRes, usersRes] = await Promise.all([
+        axios.get('http://localhost:3031/api/ads'),
+        axios.get('http://localhost:3031/api/user')
+      ]);
+
+      setNeeds(adsRes.data.data);
+
+      // Create a map of users by their ID for quick lookup
+      const mapping = {};
+      usersRes.data.data.forEach(user => {
+        mapping[user.id] = { name: user.name, email: user.email };
+      });
+      setUsersMap(mapping);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="others-needs-page">
@@ -93,40 +118,42 @@ export default function OthersNeeds() {
             <p>No requests found for this filter.</p>
           </div>
         ) : (
-          filteredNeeds.map(need => (
-            <div key={need.id} className="request-card">
-              <div className="request-card-header">
-                <div className="request-user-info">
-                  <div className="user-avatar-small">{need.user.charAt(0)}</div>
-                  <span className="user-name">{need.user}</span>
-                  <span className="post-date">• {need.datePosted}</span>
+          filteredNeeds.map(need => {
+            const user = usersMap[need.created_by] || { name: 'Unknown User', email: '' };
+            return (
+              <div key={need.ad_id} className="request-card">
+                <div className="request-card-header">
+                  <div className="request-user-info">
+                    <div className="user-avatar-small">{user.name.charAt(0)}</div>
+                    <span className="user-name">{user.name}</span>
+                    <span className="post-date">• {need.datePosted || 'Just now'}</span>
+                  </div>
+                  <div className="request-price">
+                    Budget: <strong>${need.budget}</strong>
+                  </div>
                 </div>
-                <div className="request-price">
-                  Budget: <strong>${need.budget}</strong>
-                </div>
-              </div>
 
-              <div className="request-card-body">
-                <h3 className="request-title">{need.title}</h3>
-                <p className="request-desc">{need.description}</p>
-                <div className="request-tags">
-                  <span className={`urgency-badge urgency-${need.urgency.toLowerCase()}`}>
-                    {need.urgency} Urgency
-                  </span>
-                  <span className="category-badge">{need.category}</span>
+                <div className="request-card-body">
+                  <h3 className="request-title">{need.title}</h3>
+                  <p className="request-desc">{need.description}</p>
+                  <div className="request-tags">
+                    <span className={`urgency-badge urgency-${need.urgency?.toLowerCase()}`}>
+                      {need.urgency} Urgency
+                    </span>
+                  </div>
+                </div>
+
+                <div className="request-card-footer">
+                  <button className="btn-save">
+                    <Heart className="h-4 w-4" /> Save
+                  </button>
+                  <button className="btn-contact" onClick={() => console.log("Message", user.email)}>
+                    <MessageCircle className="h-4 w-4" /> Message {user.name.split(' ')[0]}
+                  </button>
                 </div>
               </div>
-
-              <div className="request-card-footer">
-                <button className="btn-save">
-                  <Heart className="h-4 w-4" /> Save
-                </button>
-                <button className="btn-contact">
-                  <MessageCircle className="h-4 w-4" /> Message {need.user.split(' ')[0]}
-                </button>
-              </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>

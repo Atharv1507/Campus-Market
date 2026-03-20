@@ -6,7 +6,7 @@ import userRoutes from "./routes/userRoutes.js"
 import errorHandling from './middleware/errorHandler.js';
 import createUserTable from './data/createUserTable.js';
 import createAdsTable from './data/createAdsTable.js';
-
+import adsRoutes from './routes/adsRoutes.js'
 
 dotenv.config();
 const app =express();
@@ -18,7 +18,7 @@ app.use(cors())
 
 //Routes
 app.use("/api",userRoutes)
-
+app.use('/api',adsRoutes)
 //Error Handling
 app.use(errorHandling)
 //Create user table if not exists

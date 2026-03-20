@@ -7,7 +7,7 @@ import Footer from './components/Footer';
 import AuthPage from './components/AuthPage';
 import UploadProductModal from './components/UploadProductModal';
 import MyAds from './components/MyAds';
-import OthersNeeds from './components/OthersNeeds';
+import AllAds from './components/AllAds';
 import { products } from './data/mockData';
 import './index.css';
 import './App.css';
@@ -18,6 +18,7 @@ function App() {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const { isSignedIn } = useAuth();
   const { user } = useUser();
+  const [allAds, setAllAds] = useState([])
 
   function handleUserLogin() {
     axios({
@@ -35,16 +36,13 @@ function App() {
     });
   }
 
+
   useEffect(() => {
     if (!isSignedIn || !user) return
     handleUserLogin()
 
   }, [isSignedIn])
 
-  // useEffect(() => {
-  //   handleOtherNeeds()
-  //   handleMyAds()
-  // }, [])
   return (
     <div className="app-container">
       <Header isSignedIn={isSignedIn} onOpenUpload={() => setIsUploadOpen(true)} />
@@ -59,7 +57,7 @@ function App() {
           <Route path="/auth/login/*" element={<AuthPage />} />
           <Route path="/auth/signup/*" element={<AuthPage />} />
           <Route path="/my-ads" element={<MyAds />} />
-          <Route path="/others-needs" element={<OthersNeeds />} />
+          <Route path="/all-ads" element={<AllAds ads={allAds} />} />
         </Routes>
       </main>
 

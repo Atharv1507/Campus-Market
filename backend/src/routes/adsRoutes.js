@@ -1,9 +1,11 @@
 import express from "express"
-import { createAd, deleteAdById, getAllAds, updateAdById } from "../controller/adsController"
+import { createAd, deleteAdById, getAllAds, updateAdById } from "../controller/adsController.js"
 
 const router=express.Router()
 
 router.post('/ads',createAd)
 router.get('/ads',getAllAds)
-router.delete('/ads:id',deleteAdById)
-router.put('/ads:id',updateAdById)
+router.delete('/ads/:id',deleteAdById)
+router.put('/ads/:id',updateAdById)
+
+export default router
