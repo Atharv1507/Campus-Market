@@ -16,7 +16,7 @@ export default function Header({ isSignedIn, onOpenUpload }) {
           <div className="brand-icon">
             C
           </div>
-          <span className="brand-text">Campus <span className="brand-highlight">Mart</span></span>
+          <span className="brand-text">Scaler <span className="brand-highlight">Market</span></span>
         </Link>
 
         {/* Desktop Nav */}

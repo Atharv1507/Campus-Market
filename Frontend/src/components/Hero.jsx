@@ -23,10 +23,10 @@ export default function Hero({ onSearch }) {
         <div className="hero-text-wrapper">
           <h1 className="hero-title">
             <span>Buy, sell & trade</span>{' '}
-            <span className="hero-title-highlight">on campus</span>
+            <span className="hero-title-highlight">at Scaler</span>
           </h1>
           <p className="hero-subtitle">
-            The easiest way for students to buy textbooks, dorm essentials, electronics, and more from other students right here on campus.
+            The easiest way for students to buy textbooks, dorm essentials, electronics, and more from other students right here at Scaler.
           </p>
 
           <div className="hero-search-wrapper">
@@ -34,7 +34,7 @@ export default function Hero({ onSearch }) {
               <Search className="hero-search-icon" />
               <input
                 className="hero-search-input"
-                placeholder="Search campus items, textbooks, housing..."
+                placeholder="Search Scaler items, textbooks, housing..."
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
