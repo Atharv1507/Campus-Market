@@ -26,7 +26,7 @@ function App() {
   function handleUserLogin() {
     axios({
       method: 'post',
-      url: 'http://localhost:3031/api/user',
+      url: `${import.meta.env.VITE_API_URL}/api/user`,
       data: {
         id: user.id,
         name: user.fullName,

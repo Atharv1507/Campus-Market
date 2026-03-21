@@ -40,7 +40,7 @@ export default function UploadProductModal({ onClose, onSuccess }) {
     setIsLoading(true);
     setError(null);
     try {
-      await axios.post('http://localhost:3031/api/products', {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, {
         ...formData,
         price: parseFloat(formData.price),
         created_by: user ? user.id : 'anonymous'

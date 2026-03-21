@@ -11,7 +11,7 @@ export const UserProvider = ({ children }) => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('http://localhost:3031/api/user');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/user`);
       const usersData = res.data.data;
       setUsers(usersData);
       

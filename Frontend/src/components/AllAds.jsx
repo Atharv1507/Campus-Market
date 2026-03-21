@@ -70,7 +70,7 @@ export default function AllAds({ ads }) {
 
   const fetchData = async () => {
     try {
-      const adsRes = await axios.get('http://localhost:3031/api/ads');
+      const adsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/ads`);
       setNeeds(adsRes.data.data);
     } catch (err) {
       console.error('Error fetching data:', err);

@@ -13,7 +13,7 @@ export default function MyPosts() {
 
   useEffect(() => {
     if (!user) return;
-    axios.get('http://localhost:3031/api/products')
+    axios.get(`${import.meta.env.VITE_API_URL}/api/products`)
       .then((res) => {
         const data = res.data.data.filter(product => product.created_by === user.id);
         setProducts(data);
@@ -26,7 +26,7 @@ export default function MyPosts() {
   const handleDelete = (id) => {
     axios({
       method: 'delete',
-      url: `http://localhost:3031/api/products/${id}`,
+      url: `${import.meta.env.VITE_API_URL}/api/products/${id}`,
     }).then((res) => {
       console.log('Deleted product:', res.data);
       setProducts(products.filter(p => p.product_id !== id));

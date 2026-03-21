@@ -11,7 +11,7 @@ export default function ProductGrid({ searchQuery = "", refreshKey = 0 }) {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get('http://localhost:3031/api/products');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`);
       if (res.data && res.data.data) {
         setProducts(res.data.data);
         console.log(res.data.data)

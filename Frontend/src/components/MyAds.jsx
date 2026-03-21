@@ -11,7 +11,7 @@ export default function MyAds() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   useEffect(() => {
     if (!user) return;
-    axios.get('http://localhost:3031/api/ads').then((res) => {
+    axios.get(`${import.meta.env.VITE_API_URL}/api/ads`).then((res) => {
       const data = res.data.data.filter(need => need.created_by === user.id)
       setNeeds(data);
     }).catch((err) => {
@@ -21,7 +21,7 @@ export default function MyAds() {
   function handlePost(postData) {
     axios({
       method: 'post',
-      url: 'http://localhost:3031/api/ads',
+      url: `${import.meta.env.VITE_API_URL}/api/ads`,
       data: postData
     }).then((res) => {
       // res.data.data contains the new ad with its ad_id
@@ -51,7 +51,7 @@ export default function MyAds() {
   const handleDelete = (id) => {
     axios({
       method: 'delete',
-      url: `http://localhost:3031/api/ads/${id}`,
+      url: `${import.meta.env.VITE_API_URL}/api/ads/${id}`,
     }).then((res) => {
       console.log(res.data);
       // Only remove from UI if the backend request was successful
