@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import ProductGrid from './components/ProductGrid';
@@ -22,6 +22,16 @@ function App() {
   const { isSignedIn } = useAuth();
   const { user } = useUser();
   const [allAds, setAllAds] = useState([])
+
+  const navigate = useNavigate();
+
+  const handleOpenUpload = () => {
+    if (isSignedIn) {
+      setIsUploadOpen(true);
+    } else {
+      navigate('/auth/signup');
+    }
+  };
 
   function handleUserLogin() {
     axios({
@@ -48,7 +58,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <Header isSignedIn={isSignedIn} onOpenUpload={() => setIsUploadOpen(true)} />
+      <Header isSignedIn={isSignedIn} onOpenUpload={handleOpenUpload} />
       <main className="main-content">
         <Routes>
           <Route path="/" element={

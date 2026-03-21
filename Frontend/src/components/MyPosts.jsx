@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Trash2, Lock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import './MyPosts.css';
 import axios from 'axios';
 import { useUser } from '@clerk/react';
@@ -36,7 +37,20 @@ export default function MyPosts() {
   };
 
   if (!isLoaded) return <div className="my-posts-page"><p style={{ color: 'var(--text-muted)' }}>Loading...</p></div>;
-  if (!isSignedIn) return <div className="my-posts-page"><p style={{ color: 'var(--text-muted)' }}>Please sign in to view your posts.</p></div>;
+  if (!isSignedIn) {
+    return (
+      <div className="my-posts-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+        <div style={{ textAlign: 'center', padding: '3rem', backgroundColor: 'var(--bg-surface)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', maxWidth: '400px' }}>
+          <div style={{ width: '4rem', height: '4rem', backgroundColor: 'rgba(59, 130, 246, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto' }}>
+            <Lock className="h-8 w-8" style={{ color: 'var(--primary-500)' }} />
+          </div>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--text-main)', marginBottom: '0.5rem' }}>Authentication Required</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9375rem' }}>Create an account or sign in to view and centrally manage your enlisted products.</p>
+          <Link to="/auth/signup" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '0.625rem 1.25rem', backgroundColor: 'var(--primary-500)', color: 'white', borderRadius: 'var(--radius-full)', fontWeight: '500', textDecoration: 'none', transition: 'background-color 0.2s' }}>Sign up / Login</Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="my-posts-page">
