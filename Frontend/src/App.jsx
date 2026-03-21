@@ -8,6 +8,7 @@ import AuthPage from './components/AuthPage';
 import UploadProductModal from './components/UploadProductModal';
 import MyAds from './components/MyAds';
 import AllAds from './components/AllAds';
+import MyPosts from './components/MyPosts';
 import { products } from './data/mockData';
 import './index.css';
 import './App.css';
@@ -16,6 +17,8 @@ import axios from 'axios'
 
 function App() {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
   const { isSignedIn } = useAuth();
   const { user } = useUser();
   const [allAds, setAllAds] = useState([])
@@ -50,13 +53,14 @@ function App() {
         <Routes>
           <Route path="/" element={
             <>
-              <Hero />
-              <ProductGrid products={products} />
+              <Hero onSearch={setSearchQuery} />
+              <ProductGrid searchQuery={searchQuery} refreshKey={refreshKey} />
             </>
           } />
           <Route path="/auth/login/*" element={<AuthPage />} />
           <Route path="/auth/signup/*" element={<AuthPage />} />
           <Route path="/my-ads" element={<MyAds />} />
+          <Route path="/my-posts" element={<MyPosts />} />
           <Route path="/all-ads" element={<AllAds ads={allAds} />} />
         </Routes>
       </main>
@@ -64,7 +68,10 @@ function App() {
       <Footer />
 
       {isUploadOpen && (
-        <UploadProductModal onClose={() => setIsUploadOpen(false)} />
+        <UploadProductModal 
+          onClose={() => setIsUploadOpen(false)} 
+          onSuccess={() => setRefreshKey(prev => prev + 1)} 
+        />
       )}
     </div>
   );

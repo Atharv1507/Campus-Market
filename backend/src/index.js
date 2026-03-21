@@ -6,7 +6,9 @@ import userRoutes from "./routes/userRoutes.js"
 import errorHandling from './middleware/errorHandler.js';
 import createUserTable from './data/createUserTable.js';
 import createAdsTable from './data/createAdsTable.js';
+import createProductsTable from './data/createProductsTable.js';
 import adsRoutes from './routes/adsRoutes.js'
+import productRoutes from './routes/productRoutes.js'
 
 dotenv.config();
 const app =express();
@@ -19,11 +21,13 @@ app.use(cors())
 //Routes
 app.use("/api",userRoutes)
 app.use('/api',adsRoutes)
+app.use('/api',productRoutes)
 //Error Handling
 app.use(errorHandling)
 //Create user table if not exists
 createUserTable()
 createAdsTable()
+createProductsTable()
 //Testing postgres Connection
 app.get('/',async(req,res)=>{
     const result=await pool.query("SELECT current_database()")

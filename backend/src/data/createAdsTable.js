@@ -19,7 +19,11 @@ const createAdsTable = async () => {
         )
         `
         await pool.query(query)
-        console.log("Ads table created successfully")
+        
+        // Add category column if it doesn't exist (for existing tables)
+        await pool.query(`ALTER TABLE ads ADD COLUMN IF NOT EXISTS category TEXT DEFAULT 'General'`)
+        
+        console.log("Ads table initialized successfully")
     }
     catch (error) {
         console.error("Error creating Ads table", error)

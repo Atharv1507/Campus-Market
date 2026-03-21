@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MessageCircle, Heart } from 'lucide-react';
 import './AllAds.css';
 import axios from 'axios';
+import { useUsersContext } from '../context/UserContext';
 
 export default function AllAds({ ads }) {
   // const [needs] = useState([
@@ -56,8 +57,8 @@ export default function AllAds({ ads }) {
   //     category: 'Furniture & Decor'
   //   }
   // ]);
-  const [needs, setNeeds] = useState(ads)
-  const [usersMap, setUsersMap] = useState({})
+  const { usersMap, handleContact } = useUsersContext();
+  const [needs, setNeeds] = useState(ads);
   const [activeFilter, setActiveFilter] = useState('All');
   const filters = ['All', 'High Urgency', 'Electronics', 'Services', 'Clothing'];
 
@@ -69,19 +70,8 @@ export default function AllAds({ ads }) {
 
   const fetchData = async () => {
     try {
-      const [adsRes, usersRes] = await Promise.all([
-        axios.get('http://localhost:3031/api/ads'),
-        axios.get('http://localhost:3031/api/user')
-      ]);
-
+      const adsRes = await axios.get('http://localhost:3031/api/ads');
       setNeeds(adsRes.data.data);
-
-      // Create a map of users by their ID for quick lookup
-      const mapping = {};
-      usersRes.data.data.forEach(user => {
-        mapping[user.id] = { name: user.name, email: user.email };
-      });
-      setUsersMap(mapping);
     } catch (err) {
       console.error('Error fetching data:', err);
     }
@@ -129,7 +119,7 @@ export default function AllAds({ ads }) {
                     <span className="post-date">• {need.datePosted || 'Just now'}</span>
                   </div>
                   <div className="request-price">
-                    Budget: <strong>${need.budget}</strong>
+                    Budget: <strong>₹{need.budget}</strong>
                   </div>
                 </div>
 
@@ -138,8 +128,11 @@ export default function AllAds({ ads }) {
                   <p className="request-desc">{need.description}</p>
                   <div className="request-tags">
                     <span className={`urgency-badge urgency-${need.urgency?.toLowerCase()}`}>
-                      {need.urgency} Urgency
-                    </span>
+                    {need.urgency} Urgency
+                  </span>
+                  <span className="need-category-badge" style={{ backgroundColor: 'var(--bg-secondary)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', marginLeft: '0.5rem' }}>
+                    {need.category}
+                  </span>
                   </div>
                 </div>
 
@@ -147,7 +140,7 @@ export default function AllAds({ ads }) {
                   <button className="btn-save">
                     <Heart className="h-4 w-4" /> Save
                   </button>
-                  <button className="btn-contact" onClick={() => console.log("Message", user.email)}>
+                  <button className="btn-contact" onClick={() => handleContact(need.created_by)}>
                     <MessageCircle className="h-4 w-4" /> Message {user.name.split(' ')[0]}
                   </button>
                 </div>

@@ -29,9 +29,9 @@ export const deleteAdById=async (req,res,next)=>{
 
 }
 export const updateAdById=async (req,res,next)=>{
-    const{title,budget,description,urgency}=req.body
+    const{title,category,budget,description,urgency}=req.body
     try{
-        const data=await updateAdsService(req.params.id,title,budget,description,urgency)
+        const data=await updateAdsService(req.params.id,title,category,budget,description,urgency)
         if(!data) return handleResponse(res,404,'No ad with this id was found')
         handleResponse(res,200 ,"Ad updated",data)
 
@@ -41,9 +41,9 @@ export const updateAdById=async (req,res,next)=>{
     }
 }
 export const createAd=async (req,res,next)=>{
-    const{title,budget,description,created_by,urgency}=req.body
+    const{title,category,budget,description,created_by,urgency}=req.body
     try{
-        const data=await createAdsService(title,budget,description,created_by,urgency)
+        const data=await createAdsService(title,category,budget,description,created_by,urgency)
         handleResponse(res,200 ,"Ad created",data)
     }
     catch(err){

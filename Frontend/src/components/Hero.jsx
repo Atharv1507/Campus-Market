@@ -1,8 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import './Hero.css';
 
-export default function Hero() {
+export default function Hero({ onSearch }) {
+  const [inputValue, setInputValue] = useState("");
+
+  const handleSearch = () => {
+    if (onSearch) {
+      onSearch(inputValue);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="hero">
       <div className="hero-content">
@@ -22,8 +36,11 @@ export default function Hero() {
                 className="hero-search-input"
                 placeholder="Search campus items, textbooks, housing..."
                 type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
-              <button className="btn-hero-search">Search</button>
+              <button className="btn-hero-search" onClick={handleSearch}>Search</button>
             </div>
           </div>
 

@@ -1,9 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, UploadCloud } from 'lucide-react';
 import { categories } from '../data/mockData';
+import axios from 'axios';
+import { useUser } from '@clerk/react';
 import './UploadProductModal.css';
 
-export default function UploadProductModal({ onClose }) {
+export default function UploadProductModal({ onClose, onSuccess }) {
+  const { user } = useUser();
+  const [formData, setFormData] = useState({
+    title: '',
+    price: '',
+    category: '',
+    condition: 'New',
+    description: '',
+    image_url: '' // placeholder for now
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -17,9 +30,29 @@ export default function UploadProductModal({ onClose }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onClose();
+    setIsLoading(true);
+    setError(null);
+    try {
+      await axios.post('http://localhost:3031/api/products', {
+        ...formData,
+        price: parseFloat(formData.price),
+        created_by: user ? user.id : 'anonymous'
+      });
+      if (onSuccess) onSuccess();
+      onClose();
+    } catch (err) {
+      console.error('Error creating product:', err);
+      setError('Failed to create product. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -49,13 +82,15 @@ export default function UploadProductModal({ onClose }) {
                 type="text" 
                 className="form-input" 
                 placeholder="e.g. Intro to CS Textbook" 
+                value={formData.title}
+                onChange={handleInputChange}
                 required 
               />
             </div>
 
             <div className="upload-form-row">
               <div className="form-group">
-                <label className="form-label" htmlFor="price">Price ($)</label>
+                <label className="form-label" htmlFor="price">Price (₹)</label>
                 <input 
                   id="price" 
                   type="number" 
@@ -63,13 +98,15 @@ export default function UploadProductModal({ onClose }) {
                   step="0.01"
                   className="form-input" 
                   placeholder="0.00" 
+                  value={formData.price}
+                  onChange={handleInputChange}
                   required 
                 />
               </div>
 
               <div className="form-group">
                 <label className="form-label" htmlFor="category">Category</label>
-                <select id="category" className="form-input" required>
+                <select id="category" className="form-input" value={formData.category} onChange={handleInputChange} required>
                   <option value="">Select category...</option>
                   {categories.map(c => c.id !== 'all' && (
                     <option key={c.id} value={c.id}>{c.name}</option>
@@ -80,7 +117,7 @@ export default function UploadProductModal({ onClose }) {
 
             <div className="form-group">
               <label className="form-label" htmlFor="condition">Condition</label>
-              <select id="condition" className="form-input" required>
+              <select id="condition" className="form-input" value={formData.condition} onChange={handleInputChange} required>
                 <option value="New">New</option>
                 <option value="Like New">Like New</option>
                 <option value="Good">Good</option>
@@ -95,18 +132,21 @@ export default function UploadProductModal({ onClose }) {
                 id="description" 
                 className="form-input upload-desc-input" 
                 placeholder="Describe your item, formatting, defects, etc." 
+                value={formData.description}
+                onChange={handleInputChange}
                 required 
               ></textarea>
             </div>
+            {error && <p className="error-text" style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
           </form>
         </div>
 
         <div className="upload-modal-footer">
-          <button type="button" className="btn-modal-secondary" onClick={onClose}>
+          <button type="button" className="btn-modal-secondary" onClick={onClose} disabled={isLoading}>
             Cancel
           </button>
-          <button type="submit" form="upload-form" className="btn-modal-primary">
-            Post Item
+          <button type="submit" form="upload-form" className="btn-modal-primary" disabled={isLoading}>
+            {isLoading ? 'Posting...' : 'Post Item'}
           </button>
         </div>
 

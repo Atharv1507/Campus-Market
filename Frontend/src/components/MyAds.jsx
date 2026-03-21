@@ -36,6 +36,7 @@ export default function MyAds() {
     const formData = new FormData(e.target);
     const newNeed = {
       title: formData.get('title'),
+      category: formData.get('category'),
       budget: formData.get('budget'),
       description: formData.get('description'),
       created_by: user.id,
@@ -86,9 +87,22 @@ export default function MyAds() {
 
             <div className="form-row">
               <div className="form-group">
-                <label className="form-label" htmlFor="budget">Budget ($)</label>
+                <label className="form-label" htmlFor="category">Category</label>
+                <select name="category" id="category" className="form-input" required>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Clothing">Clothing</option>
+                  <option value="Services">Services</option>
+                  <option value="Furniture & Decor">Furniture & Decor</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="budget">Budget (₹)</label>
                 <input name="budget" id="budget" type="text" className="form-input" placeholder="e.g., 40 or 30-50" required />
               </div>
+            </div>
+            
+            <div className="form-row">
               <div className="form-group">
                 <label className="form-label" htmlFor="urgency">Urgency</label>
                 <select name="urgency" id="urgency" className="form-input" required>
@@ -124,12 +138,15 @@ export default function MyAds() {
               <div key={need.ad_id} className="need-card">
                 <div className="need-card-header">
                   <h3>{need.title}</h3>
-                  <span className="need-budget">${need.budget}</span>
+                  <span className="need-budget">₹{need.budget}</span>
                 </div>
                 <p className="need-desc">{need.description}</p>
                 <div className="need-meta">
                   <span className={`urgency-badge urgency-${need.urgency?.toLowerCase()}`}>
                     {need.urgency} Urgency
+                  </span>
+                  <span className="need-category-badge" style={{ backgroundColor: 'var(--bg-secondary)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>
+                    {need.category}
                   </span>
                   <span>Posted {need.datePosted}</span>
                 </div>

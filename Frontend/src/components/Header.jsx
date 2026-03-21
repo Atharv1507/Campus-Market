@@ -22,9 +22,9 @@ export default function Header({ isSignedIn, onOpenUpload }) {
         {/* Desktop Nav */}
         <nav className="header-nav">
           <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} style={{ textDecoration: 'none' }}>Browse</Link>
-          <button className="nav-link">Chats</button>
           <Link to="/all-ads" className={`nav-link ${location.pathname === '/all-ads' ? 'active' : ''}`} style={{ textDecoration: 'none' }}>Requests</Link>
           <Link to="/my-ads" className={`nav-link ${location.pathname === '/my-ads' ? 'active' : ''}`} style={{ textDecoration: 'none' }}>My Ads</Link>
+          <Link to="/my-posts" className={`nav-link ${location.pathname === '/my-posts' ? 'active' : ''}`} style={{ textDecoration: 'none' }}>My Posts</Link>
         </nav>
 
         {/* Desktop & Mobile Actions */}
@@ -36,10 +36,6 @@ export default function Header({ isSignedIn, onOpenUpload }) {
           <button className="action-icon-btn">
             <span className="notification-dot"></span>
             <Bell className="h-5 w-5" />
-          </button>
-
-          <button className="action-icon-btn">
-            <ShoppingCart className="h-5 w-5" />
           </button>
 
           {isSignedIn ? <UserButton afterSignOutUrl="/auth/login" /> :
@@ -65,6 +61,7 @@ export default function Header({ isSignedIn, onOpenUpload }) {
             <button className="mobile-nav-link">Chats</button>
             <Link to="/all-ads" className={`mobile-nav-link ${location.pathname === '/all-ads' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Requests</Link>
             <Link to="/my-ads" className={`mobile-nav-link ${location.pathname === '/my-ads' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>My Ads</Link>
+            <Link to="/my-posts" className={`mobile-nav-link ${location.pathname === '/my-posts' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>My Posts</Link>
             <button className="btn-sell mobile-sell-btn" onClick={() => { onOpenUpload(); setIsMobileMenuOpen(false); }}>
               <PlusCircle className="h-4 w-4" /> Sell Item
             </button>
