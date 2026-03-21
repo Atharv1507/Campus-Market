@@ -1,6 +1,7 @@
 import React from 'react';
 import { Instagram, Twitter, Facebook, Github } from 'lucide-react';
 import './Footer.css';
+import logo from '../assets/logo.png';
 
 export default function Footer() {
   return (
@@ -28,9 +29,7 @@ export default function Footer() {
           
           <div className="footer-info">
             <div className="footer-brand">
-              <div className="footer-icon">
-                C
-              </div>
+              <img src={logo} alt="Logo" style={{ height: '1.75rem', width: 'auto', objectFit: 'contain' }} />
               <span className="footer-brand-text">Scaler<span className="footer-brand-highlight">Market</span></span>
             </div>
             <p className="footer-copyright">

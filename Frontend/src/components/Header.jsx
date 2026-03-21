@@ -3,6 +3,7 @@ import { ShoppingCart, User, Menu, Bell, PlusCircle, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
 import { UserButton } from '@clerk/react';
+import logo from '../assets/logo.png';
 
 export default function Header({ isSignedIn, onOpenUpload }) {
   const location = useLocation();
@@ -13,9 +14,7 @@ export default function Header({ isSignedIn, onOpenUpload }) {
       <div className="header-inner">
         {/* Logo Section */}
         <Link to="/" className="header-brand" style={{ textDecoration: 'none' }}>
-          <div className="brand-icon">
-            C
-          </div>
+          <img src={logo} alt="Logo" style={{ height: '9rem', width: 'auto', objectFit: 'contain' }} />
           <span className="brand-text">Scaler <span className="brand-highlight">Market</span></span>
         </Link>
 
