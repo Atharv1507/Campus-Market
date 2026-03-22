@@ -17,6 +17,11 @@ export default function UploadProductModal({ onClose, onSuccess }) {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  const [imageFile, setImageFile] = useState(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [imagePreview, setImagePreview] = useState('');
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -33,6 +38,32 @@ export default function UploadProductModal({ onClose, onSuccess }) {
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+    setIsUploadingImage(true);
+    setError(null);
+
+    const data = new FormData();
+    data.append('file', file);
+    data.append('upload_preset', 'Marketplace');
+
+    try {
+      const res = await axios.post('https://api.cloudinary.com/v1_1/dmxf5exhr/image/upload', data);
+      setFormData(prev => ({ ...prev, image_url: res.data.secure_url }));
+    } catch (err) {
+      console.error('Cloudinary Upload Error:', err);
+      setError('Failed to upload image. Please check your network and try again.');
+      setImageFile(null);
+      setImagePreview('');
+    } finally {
+      setIsUploadingImage(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -69,10 +100,26 @@ export default function UploadProductModal({ onClose, onSuccess }) {
         <div className="upload-modal-content">
           <form id="upload-form" className="auth-form" style={{padding: 0}} onSubmit={handleSubmit}>
             
-            <div className="upload-dropzone">
-              <UploadCloud className="upload-icon" />
-              <p className="upload-text-primary">Click to upload image</p>
-              <p className="upload-text-secondary">PNG, JPG, or WEBP (Max 5MB)</p>
+            <div className="upload-dropzone" style={{ position: 'relative', overflow: 'hidden' }}>
+              <input 
+                type="file" 
+                accept="image/png, image/jpeg, image/webp"
+                onChange={handleImageUpload}
+                disabled={isUploadingImage}
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer', zIndex: 10 }}
+              />
+              {imagePreview ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <img src={imagePreview} alt="Preview" style={{ height: '80px', objectFit: 'contain', marginBottom: '8px', borderRadius: '4px' }} />
+                  <p className="upload-text-primary" style={{ fontSize: '0.875rem' }}>{isUploadingImage ? 'Uploading image...' : 'Image uploaded successfully!'}</p>
+                </div>
+              ) : (
+                <>
+                  <UploadCloud className="upload-icon" />
+                  <p className="upload-text-primary">Click to select an image</p>
+                  <p className="upload-text-secondary">PNG, JPG, or WEBP</p>
+                </>
+              )}
             </div>
 
             <div className="form-group">
@@ -142,11 +189,11 @@ export default function UploadProductModal({ onClose, onSuccess }) {
         </div>
 
         <div className="upload-modal-footer">
-          <button type="button" className="btn-modal-secondary" onClick={onClose} disabled={isLoading}>
+          <button type="button" className="btn-modal-secondary" onClick={onClose} disabled={isLoading || isUploadingImage}>
             Cancel
           </button>
-          <button type="submit" form="upload-form" className="btn-modal-primary" disabled={isLoading}>
-            {isLoading ? 'Posting...' : 'Post Item'}
+          <button type="submit" form="upload-form" className="btn-modal-primary" disabled={isLoading || isUploadingImage}>
+            {isLoading || isUploadingImage ? 'Processing...' : 'Post Item'}
           </button>
         </div>
 
