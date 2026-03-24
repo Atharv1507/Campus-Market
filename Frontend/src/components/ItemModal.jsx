@@ -1,8 +1,12 @@
 import React, { useEffect } from 'react';
 import { X, Calendar, User, Tag, ShieldCheck, MessageCircle, Heart } from 'lucide-react';
+import { useUsersContext } from '../context/UserContext';
+import { useUser } from '@clerk/react';
 import './ItemModal.css';
 
 export default function ItemModal({ product, onClose }) {
+  const { handleContact } = useUsersContext();
+  const { user } = useUser();
   // Prevent scrolling when modal is open and fix layout shift
   useEffect(() => {
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -62,7 +66,10 @@ export default function ItemModal({ product, onClose }) {
             </p>
 
             <div className="item-modal-actions">
-              <button className="btn-modal-primary">
+              <button className="btn-modal-primary" onClick={() => {
+                const contacterEmail = user?.emailAddresses?.[0]?.emailAddress;
+                handleContact(product.created_by, product.title, contacterEmail);
+              }}>
                 <MessageCircle className="h-5 w-5" /> Contact Seller
               </button>
               <button className="btn-modal-secondary" title="Save to Watchlist">

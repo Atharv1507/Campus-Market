@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Heart, MessageCircle } from 'lucide-react';
 import ItemModal from './ItemModal';
 import { useUsersContext } from '../context/UserContext';
+import { useUser } from '@clerk/react';
 import './ProductCard.css';
 
 export default function ProductCard({ product }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { usersMap, handleContact } = useUsersContext();
+  const { user } = useUser();
 
   // We want clicks on interactive elements (Heart, Waitlist) to not trigger the modal
   const handleInteraction = (e) => {
@@ -15,7 +17,8 @@ export default function ProductCard({ product }) {
 
   const onContact = (e) => {
     handleInteraction(e);
-    handleContact(product.created_by);
+    const contacterEmail = user?.emailAddresses?.[0]?.emailAddress;
+    handleContact(product.created_by, product.title, contacterEmail);
   };
 
   return (

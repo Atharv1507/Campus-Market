@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Lock } from 'lucide-react';
+import { Trash2, Lock, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import './MyPosts.css';
 import axios from 'axios';
@@ -98,8 +98,8 @@ export default function MyPosts() {
       </div>
 
       {isUploadOpen && (
-        <UploadProductModal 
-          onClose={() => setIsUploadOpen(false)} 
+        <UploadProductModal
+          onClose={() => setIsUploadOpen(false)}
           onSuccess={() => setRefreshKey(prev => prev + 1)}
         />
       )}

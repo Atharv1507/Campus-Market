@@ -68,6 +68,10 @@ export default function UploadProductModal({ onClose, onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    const isConfirmed = window.confirm("By posting this item, you agree that your email address may be shared with interested buyers so they can contact you. Do you wish to proceed?");
+    if (!isConfirmed) return;
+
     setIsLoading(true);
     setError(null);
     try {
