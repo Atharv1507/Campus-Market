@@ -72,6 +72,11 @@ export default function UploadProductModal({ onClose, onSuccess }) {
     const isConfirmed = window.confirm("By posting this item, you agree that your email address may be shared with interested buyers so they can contact you. Do you wish to proceed?");
     if (!isConfirmed) return;
 
+    if (!formData.image_url) {
+      setError("Please upload an image before posting the item.");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     try {
@@ -120,8 +125,8 @@ export default function UploadProductModal({ onClose, onSuccess }) {
               ) : (
                 <>
                   <UploadCloud className="upload-icon" />
-                  <p className="upload-text-primary">Click to select an image</p>
-                  <p className="upload-text-secondary">PNG, JPG, or WEBP</p>
+                  <p className="upload-text-primary">Click to select an image <span className="required-star">*</span></p>
+                  <p className="upload-text-secondary">PNG, JPG, or WEBP (Required)</p>
                 </>
               )}
             </div>

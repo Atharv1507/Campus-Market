@@ -39,7 +39,7 @@ export default function ProductCard({ product }) {
             </span>
           </div>
         </div>
-        
+
         <div className="card-content">
           <div>
             <div className="card-title-group">
@@ -49,20 +49,20 @@ export default function ProductCard({ product }) {
                 Posted by {usersMap[product.created_by] ? usersMap[product.created_by].name : 'Unknown User'}
               </p>
             </div>
-            
+
             <div className="card-tags">
               {product.tags && product.tags.map(tag => (
-                 <span key={tag} className="tag">
-                   {tag}
-                 </span>
+                <span key={tag} className="tag">
+                  {tag}
+                </span>
               ))}
             </div>
           </div>
-          
+
           <div className="card-footer">
             <p className="card-price">₹{product.price}</p>
             <button className="btn-waitlist" onClick={onContact}>
-              <MessageCircle className="h-4 w-4" /> Waitlist
+              <MessageCircle className="h-4 w-4" /> Contact Seller
             </button>
           </div>
         </div>

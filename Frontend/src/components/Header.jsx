@@ -32,11 +32,6 @@ export default function Header({ isSignedIn, onOpenUpload }) {
             <PlusCircle className="h-4 w-4" /> Sell Item
           </button>
 
-          <button className="action-icon-btn">
-            <span className="notification-dot"></span>
-            <Bell className="h-5 w-5" />
-          </button>
-
           {isSignedIn ? <UserButton afterSignOutUrl="/auth/login" /> :
             <Link to="/auth/signup" className="user-profile-btn" style={{ textDecoration: 'none' }} title="Login / Signup">
               <div className="user-avatar">

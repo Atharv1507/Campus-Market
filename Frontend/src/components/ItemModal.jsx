@@ -5,14 +5,14 @@ import { useUser } from '@clerk/react';
 import './ItemModal.css';
 
 export default function ItemModal({ product, onClose }) {
-  const { handleContact } = useUsersContext();
+  const { usersMap, handleContact } = useUsersContext();
   const { user } = useUser();
   // Prevent scrolling when modal is open and fix layout shift
   useEffect(() => {
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = 'hidden';
     document.body.style.paddingRight = `${scrollbarWidth}px`;
-    
+
     return () => {
       document.body.style.overflow = 'unset';
       document.body.style.paddingRight = '0px';
@@ -40,7 +40,7 @@ export default function ItemModal({ product, onClose }) {
 
           <div className="item-details-section">
             <h2 className="item-modal-title">{product.title}</h2>
-            <p className="item-modal-price">${product.price}</p>
+            <p className="item-modal-price">₹{product.price}</p>
 
             <div className="item-modal-meta">
               <div className="meta-item">
@@ -53,7 +53,7 @@ export default function ItemModal({ product, onClose }) {
               </div>
               <div className="meta-item">
                 <User className="h-4 w-4 meta-icon" />
-                <span>Seller: {product.seller}</span>
+                <span>Seller: {usersMap[product.created_by] ? usersMap[product.created_by].name : 'Unknown User'}</span>
               </div>
               <div className="meta-item">
                 <Calendar className="h-4 w-4 meta-icon" />
@@ -71,9 +71,6 @@ export default function ItemModal({ product, onClose }) {
                 handleContact(product.created_by, product.title, contacterEmail);
               }}>
                 <MessageCircle className="h-5 w-5" /> Contact Seller
-              </button>
-              <button className="btn-modal-secondary" title="Save to Watchlist">
-                <Heart className="h-5 w-5" />
               </button>
             </div>
           </div>
