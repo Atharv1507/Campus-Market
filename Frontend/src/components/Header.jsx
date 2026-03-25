@@ -52,7 +52,6 @@ export default function Header({ isSignedIn, onOpenUpload }) {
         <div className="mobile-nav-menu">
           <nav className="mobile-nav-links">
             <Link to="/" className={`mobile-nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Browse</Link>
-            <button className="mobile-nav-link">Chats</button>
             <Link to="/all-ads" className={`mobile-nav-link ${location.pathname === '/all-ads' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Requests</Link>
             <Link to="/my-ads" className={`mobile-nav-link ${location.pathname === '/my-ads' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>My Ads</Link>
             <Link to="/my-posts" className={`mobile-nav-link ${location.pathname === '/my-posts' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>My Posts</Link>
