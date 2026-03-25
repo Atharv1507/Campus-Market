@@ -9,7 +9,7 @@ import createAdsTable from './data/createAdsTable.js';
 import createProductsTable from './data/createProductsTable.js';
 import adsRoutes from './routes/adsRoutes.js'
 import productRoutes from './routes/productRoutes.js'
-import deleteTables from './data/deleteTables.js';
+
 
 dotenv.config();
 const app = express();
