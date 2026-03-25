@@ -15,7 +15,7 @@ export default function Header({ isSignedIn, onOpenUpload }) {
         {/* Logo Section */}
         <Link to="/" className="header-brand" style={{ textDecoration: 'none' }}>
           <img src={logo} alt="Logo" style={{ height: '9rem', width: 'auto', objectFit: 'contain' }} />
-          <span className="brand-text">Scaler <span className="brand-highlight">Market</span></span>
+          <span className="brand-text"> <span className="brand-highlight">Marketplace</span></span>
         </Link>
 
         {/* Desktop Nav */}

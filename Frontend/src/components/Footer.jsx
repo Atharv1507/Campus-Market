@@ -8,25 +8,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer-inner">
         <div className="footer-content">
-          <div className="footer-socials">
-            <a href="#" className="social-link">
-              <span className="sr-only">Facebook</span>
-              <Facebook className="h-6 w-6" />
-            </a>
-            <a href="#" className="social-link">
-              <span className="sr-only">Instagram</span>
-              <Instagram className="h-6 w-6" />
-            </a>
-            <a href="#" className="social-link">
-              <span className="sr-only">Twitter</span>
-              <Twitter className="h-6 w-6" />
-            </a>
-            <a href="#" className="social-link">
-              <span className="sr-only">GitHub</span>
-              <Github className="h-6 w-6" />
-            </a>
-          </div>
-          
+
           <div className="footer-info">
             <div className="footer-brand">
               <img src={logo} alt="Logo" style={{ height: '1.75rem', width: 'auto', objectFit: 'contain' }} />

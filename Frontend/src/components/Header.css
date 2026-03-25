@@ -21,7 +21,6 @@
 .header-brand {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
   cursor: pointer;
   text-decoration: none;
 }
@@ -233,6 +232,13 @@
   align-items: center;
   justify-content: center;
   color: var(--primary-100);
+}
+
+@media (max-width: 768px) {
+  .user-avatar, .user-avatar-clerk {
+    height: 2rem !important;
+    width: 2rem !important;
+  }
 }
 
 /* Mobile Nav Menu styles */

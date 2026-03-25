@@ -7,10 +7,16 @@ import { ClerkProvider } from '@clerk/react';
 import { ErrorProvider } from "./context/ErrorContext.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
 
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
+if (!PUBLISHABLE_KEY) {
+  console.error("Missing Publishable Key. Please add VITE_CLERK_PUBLISHABLE_KEY to your .env file.")
+}
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <ClerkProvider>
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
         <ErrorProvider>
           <UserProvider>
             <App />
