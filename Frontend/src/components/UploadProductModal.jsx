@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { X, UploadCloud } from 'lucide-react';
 import { categories } from '../data/mockData';
 import axios from 'axios';
@@ -21,6 +21,8 @@ export default function UploadProductModal({ onClose, onSuccess }) {
   const [imageFile, setImageFile] = useState(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [imagePreview, setImagePreview] = useState('');
+  const cameraInputRef = useRef(null);
+  const galleryInputRef = useRef(null);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -29,9 +31,27 @@ export default function UploadProductModal({ onClose, onSuccess }) {
     };
   }, []);
 
+  const handleClose = () => {
+    if (formData.image_url) {
+      axios.post(`${import.meta.env.VITE_API_URL}/api/delete-image`, { image_url: formData.image_url })
+        .catch(err => console.error('Failed to clear image:', err));
+    }
+    onClose();
+  };
+
+  const handleRemoveFile = () => {
+    if (formData.image_url) {
+      axios.post(`${import.meta.env.VITE_API_URL}/api/delete-image`, { image_url: formData.image_url })
+        .catch(err => console.error('Failed to clear image:', err));
+    }
+    setImagePreview('');
+    setImageFile(null);
+    setFormData(prev => ({ ...prev, image_url: '' }));
+  };
+
   const handleBackdropClick = (e) => {
     if (e.target.classList.contains('modal-overlay')) {
-      onClose();
+      handleClose();
     }
   };
 
@@ -43,6 +63,22 @@ export default function UploadProductModal({ onClose, onSuccess }) {
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    // Security check: Validate file format
+    const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+
+    if (!validTypes.includes(file.type)) {
+      setError('Invalid image format. Please upload a PNG, JPEG, or WEBP file.');
+      e.target.value = '';
+      return;
+    }
+
+    // Security check: Validate file size (e.g., max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('File size is too large. Maximum allowed is 5MB.');
+      e.target.value = '';
+      return;
+    }
 
     setImageFile(file);
     setImagePreview(URL.createObjectURL(file));
@@ -101,7 +137,7 @@ export default function UploadProductModal({ onClose, onSuccess }) {
         
         <div className="upload-modal-header">
           <h2 className="upload-modal-title">Sell an Item</h2>
-          <button className="modal-close-btn" onClick={onClose} style={{position: 'static'}}>
+          <button className="modal-close-btn" onClick={handleClose} style={{position: 'static'}}>
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -109,25 +145,40 @@ export default function UploadProductModal({ onClose, onSuccess }) {
         <div className="upload-modal-content">
           <form id="upload-form" className="auth-form" style={{padding: 0}} onSubmit={handleSubmit}>
             
-            <div className="upload-dropzone" style={{ position: 'relative', overflow: 'hidden' }}>
-              <input 
-                type="file" 
-                accept="image/png, image/jpeg, image/webp"
-                onChange={handleImageUpload}
-                disabled={isUploadingImage}
-                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer', zIndex: 10 }}
-              />
+            <div className="upload-dropzone" style={{ position: 'relative', overflow: 'hidden', padding: '20px' }}>
               {imagePreview ? (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
                   <img src={imagePreview} alt="Preview" style={{ height: '80px', objectFit: 'contain', marginBottom: '8px', borderRadius: '4px' }} />
                   <p className="upload-text-primary" style={{ fontSize: '0.875rem' }}>{isUploadingImage ? 'Uploading image...' : 'Image uploaded successfully!'}</p>
+                   {!isUploadingImage && (
+                    <button 
+                      type="button" 
+                      onClick={handleRemoveFile} 
+                      className="btn-modal-secondary" 
+                      style={{ marginTop: '10px', padding: '4px 8px', fontSize: '0.8rem' }}
+                    >
+                      Remove File
+                    </button>
+                  )}
                 </div>
               ) : (
-                <>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', width: '100%', zIndex: 11 }}>
                   <UploadCloud className="upload-icon" />
-                  <p className="upload-text-primary">Click to select an image <span className="required-star">*</span></p>
-                  <p className="upload-text-secondary">PNG, JPG, or WEBP (Required)</p>
-                </>
+                  <p className="upload-text-primary">Add an Image <span className="required-star">*</span></p>
+                  
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '5px' }}>
+                    <button type="button" className="btn-modal-primary" style={{ padding: '8px 12px', fontSize: '0.85rem' }} onClick={(e) => { e.preventDefault(); cameraInputRef.current?.click(); }}>
+                      Take Photo
+                    </button>
+                    <button type="button" className="btn-modal-secondary" style={{ padding: '8px 12px', fontSize: '0.85rem' }} onClick={(e) => { e.preventDefault(); galleryInputRef.current?.click(); }}>
+                      Choose File
+                    </button>
+
+                    <input type="file" accept="image/png, image/jpeg, image/webp" capture="environment" onChange={handleImageUpload} disabled={isUploadingImage} style={{ display: 'none' }} ref={cameraInputRef} />
+                    <input type="file" accept="image/png, image/jpeg, image/webp" onChange={handleImageUpload} disabled={isUploadingImage} style={{ display: 'none' }} ref={galleryInputRef} />
+                  </div>
+                  <p className="upload-text-secondary" style={{ marginTop: '5px' }}>Max size: 5MB</p>
+                </div>
               )}
             </div>
 
@@ -198,10 +249,10 @@ export default function UploadProductModal({ onClose, onSuccess }) {
         </div>
 
         <div className="upload-modal-footer">
-          <button type="button" className="btn-modal-secondary" onClick={onClose} disabled={isLoading || isUploadingImage}>
+          <button type="button" className="btn-modal-secondary" onClick={handleClose} disabled={isLoading || isUploadingImage}>
             Cancel
           </button>
-          <button type="submit" form="upload-form" className="btn-modal-primary" disabled={isLoading || isUploadingImage}>
+          <button type="button" onClick={handleSubmit} className="btn-modal-primary" disabled={isLoading || isUploadingImage}>
             {isLoading || isUploadingImage ? 'Processing...' : 'Post Item'}
           </button>
         </div>
