@@ -10,13 +10,8 @@ export default function ProductCard({ product }) {
   const { usersMap, handleContact } = useUsersContext();
   const { user } = useUser();
 
-  // We want clicks on interactive elements (Heart, Waitlist) to not trigger the modal
-  const handleInteraction = (e) => {
-    e.stopPropagation();
-  };
-
   const onContact = (e) => {
-    handleInteraction(e);
+    e.stopPropagation();
     const contacterEmail = user?.emailAddresses?.[0]?.emailAddress;
     handleContact(product.created_by, product.title, contacterEmail);
   };

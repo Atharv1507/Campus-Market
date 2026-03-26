@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from "cors"
 import dotenv from "dotenv"
+import rateLimit from "express-rate-limit"
 import pool from './config/db.js';
 import userRoutes from "./routes/userRoutes.js"
 import errorHandling from './middleware/errorHandler.js';
@@ -15,11 +16,23 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 8080
 
+// Rate Limiter
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes window
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: {
+    error: "Too many requests from this IP, please try again after 15 minutes."
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 //MiddleWares
 app.use(express.json())
 app.use(cors())
 
-//Routes
+// Routes
+app.use("/api", apiLimiter) // Apply rate limiter to all API routes
 app.use("/api", userRoutes)
 app.use('/api', adsRoutes)
 app.use('/api', productRoutes)
