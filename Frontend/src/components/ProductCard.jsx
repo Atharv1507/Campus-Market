@@ -30,9 +30,6 @@ export default function ProductCard({ product }) {
             alt={product.title}
             className="card-image"
           />
-          <button className="card-heart-btn" onClick={handleInteraction}>
-            <Heart className="h-4 w-4" />
-          </button>
           <div className="card-badges">
             <span className="badge-condition">
               {product.condition}

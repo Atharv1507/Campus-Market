@@ -35,7 +35,11 @@ export default function ItemModal({ product, onClose }) {
 
         <div className="item-modal-content">
           <div className="item-image-section">
-            <img src={product.image} alt={product.title} className="item-modal-image" />
+            <img
+              src={product.image || product.image_url || 'https://via.placeholder.com/600?text=No+Image'}
+              alt={product.title}
+              className="item-modal-image"
+            />
           </div>
 
           <div className="item-details-section">
