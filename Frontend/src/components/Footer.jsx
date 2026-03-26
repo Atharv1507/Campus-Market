@@ -11,7 +11,6 @@ export default function Footer() {
 
           <div className="footer-info">
             <div className="footer-brand">
-              <img src={logo} alt="Logo" style={{ height: '1.75rem', width: 'auto', objectFit: 'contain' }} />
               <span className="footer-brand-text">Scaler<span className="footer-brand-highlight">Market</span></span>
             </div>
             <p className="footer-copyright">
